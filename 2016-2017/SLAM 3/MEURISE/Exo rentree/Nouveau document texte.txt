@@ -1,0 +1,39 @@
+CLIENT(Num_cli, Nom_Cli, Ad_Ville_Cli,Ad_rue_cli, ad_cp_cli, Entreprise_cli)
+Clé Primaire : Num_cli
+
+
+
+VEHICULE(Num_minéralogique, Marque_véhicule,Modèle,Année_circulation, Num_cli)
+clé primaire : Num_minéralogique
+clé étrangère : Num_cli Reférence à Num_cli de CLIENT
+
+
+
+REPARATION(Num_bon_de_travail, Date_réparation,Num_minéralogique)
+clé primaire : Num_bon_de_Travail
+clé étrangère : Num_minéralogique en ref à Num_minéralogique de VEHICULE
+
+
+
+OPERATION(code_opé, désignation opé, Temps_Travail_opé)
+Clé primaire : Code_opé
+
+
+
+PIECE(Référence_Piece, Désignation_Pièce, PU_Pièce)
+clé primaire: Référence_Piece 
+
+
+
+ENTRAINer(Num_bon_de_Travail,code_opé)
+clé primaire : Num_bon_de_Travail,code_opé
+clé étrangère : - Num_bon_de_Travail en tef à Num_bon_de_Travail de REPARATION
+		- code_opé en ref à code_opé de OPERATION
+
+
+
+NECESSECITER(Code_opé,Référence_Piece,Nombre_Piece)
+clé primaire : Code_opé,Référence_Piece
+clé étrangère : - code_opé en ref à code_opé de OPERATION
+		- Référence_Pièce en ref à Référence_Pièce de PIECE
+

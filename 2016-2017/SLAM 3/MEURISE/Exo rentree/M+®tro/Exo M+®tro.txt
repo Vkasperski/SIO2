@@ -1,0 +1,47 @@
+LIGNE(Id_Ligne,Nom_ligne,Term_1_Ligne,Term_2_Ligne,Heure_Dep_Term1,Heure_Dep,Term2)
+Clé primaire : Id_Ligne
+
+
+
+FREQUENCE(Id_freq,Plage_Horraire,temps_trains,jour,ID_Ligne)
+clé primaire : Id_freq
+clé étrangère : ID_Ligne en ref à ID_Ligne de LIGNE
+
+
+
+STATION(id_station,nom_station,ID_Ligne)
+clé primaire : id_station
+clé étrangère : ID_Ligne en ref à ID_Ligne de LIGNE
+
+
+
+APPARTENIR(ID_Ligne,ID_Station)
+clé primaire : ID_Ligne,ID_Station
+clé étrangère : - ID_Ligne en ref à ID_Ligne de LIGNE
+		- ID_Station en ref à ID_Station de STATION
+
+
+
+
+
+
+
+REQUETTES :
+
+I)
+SELECT nom_station
+FROM STATION
+WHERE ID_Ligne= "A";
+
+
+II)
+SELECT Nom_ligne,Term_1_Ligne,Term_2_Ligne,Heure_Dep_Term1,Heure_Dep,Term2
+FROM LIGNE;
+
+
+III)
+SELECT temps_trains
+FROM FREQUENCE
+WHERE ID_Ligne="C"
+AND jour = "Semaine"
+AND Plage_Horraire = "7h_9h"; 

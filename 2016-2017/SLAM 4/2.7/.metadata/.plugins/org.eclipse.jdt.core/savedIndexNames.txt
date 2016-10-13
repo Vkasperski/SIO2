@@ -1,0 +1,8 @@
+INDEX VERSION 1.127+C:\Users\vkasperski\workspace\SIO 2\SLAM 4\2.7\.metadata\.plugins\org.eclipse.jdt.core
+640332567.index
+833696271.index
+4185170267.index
+2830656437.index
+1365515607.index
+3753857827.index
+3362606317.index
