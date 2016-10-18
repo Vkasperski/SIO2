@@ -1,0 +1,5 @@
+I) Definition
+Une signature éléctronique (appelé aussi signature numérique) permet d'assurer l'intégrité d'un document éléctronique(de verifié si le document n'est pas falcifié) et de pouvoir authentifier son auteur(qui doit être identifier par le lecteur du document).
+Contrairement à la signature écrite, elle est invisible directement mais elle corespond à une suite de caractère.
+Par exemple lors de l'envoi d'un couriel, le contenue est codé puis envoyé; à la reception le code est verifié puis validé pour authentifié l'auteur du couriel.
+
