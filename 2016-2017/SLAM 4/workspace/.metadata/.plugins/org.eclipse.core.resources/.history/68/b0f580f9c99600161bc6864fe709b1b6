@@ -1,0 +1,10 @@
+
+
+public class zone {
+	private
+		int dimention[][];
+	public zone(int x)
+	{
+		dimention.length = x,x;
+	}
+}
