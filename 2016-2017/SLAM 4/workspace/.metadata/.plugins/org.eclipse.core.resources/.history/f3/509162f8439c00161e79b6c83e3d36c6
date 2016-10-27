@@ -1,0 +1,19 @@
+public class Move 
+{
+	public void Moveleft(TabTuile Tab)
+	{
+		int dim = Tab.getDim();
+		int TabT[][] = Tab.getTab();
+		for(int i=0;i<dim;i++)
+		{
+			for(int j=1;j<dim;j++)
+			{
+				if(TabT[i][j]!=0 || TabT[i][j-1]==0)
+				{
+					TabT[i][j-1]= TabT[i][j];
+					TabT[i][j]=0;
+				}
+			}
+		}
+	}
+}
