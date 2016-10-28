@@ -95,7 +95,6 @@ public class TabTuile
 			{
 				if(TabJeu[i][j]!=0)
 				{
-					if(	)
 					if(TabJeu[i][j-1]==TabJeu[i][j])
 					{
 						TabJeu[i][j-1]=TabJeu[i][j]*2;

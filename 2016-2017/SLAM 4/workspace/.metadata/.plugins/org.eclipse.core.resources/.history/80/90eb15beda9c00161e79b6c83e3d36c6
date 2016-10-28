@@ -38,6 +38,8 @@ public class TabTuile
 		return TabJeu;
 	}
 	
+	
+	
 	public void affichTab()
 	{
 		for(int i=0; i<dimention;i++)
@@ -85,59 +87,21 @@ public class TabTuile
 		}
 		TabJeu[ligne.get(index)][colone.get(index)]= nbPop;
 	}
-	
-	public void MoveLeft()
+
+	public void move(char direction)
 	{
-		int k;
-		for(int i=0;i<dimention;i++)
+		switch(direction)
 		{
-			for(int j=1;j<dimention;j++)
-			{
-				if(TabJeu[i][j]!=0)
-				{
-					if(	)
-					if(TabJeu[i][j-1]==TabJeu[i][j])
-					{
-						TabJeu[i][j-1]=TabJeu[i][j]*2;
-						TabJeu[i][j]=0;
-						for(k=j;k<dimention-1;k++)
-						{
-							TabJeu[i][k]=TabJeu[i][k+1];
-							TabJeu[i][k+1]=0;
-						}
-					}
-				}
-			}
+			case 'g' :
+				
 		}	
 	}
-	
-	
 	public static void main(String[] args)
 	{
 		TabTuile T = new TabTuile(4);
 		T.popTuiles();
 		T.popTuiles();
-		T.MoveLeft();
 		T.affichTab();
-		System.out.println("\n \n \n \n ");
-		T.popTuiles();
-		T.popTuiles();
-		T.popTuiles();
-		T.popTuiles();
-		T.popTuiles();
-		T.popTuiles();
-		T.popTuiles();
-		T.popTuiles();
-		T.affichTab();
-		System.out.println("\n \n \n \n ");
 		T.MoveLeft();
-		T.MoveLeft();
-		T.MoveLeft();
-		T.MoveLeft();
-		T.MoveLeft();
-		T.MoveLeft();
-		T.MoveLeft();
-		T.MoveLeft();
-		T.affichTab();
 	}
 }

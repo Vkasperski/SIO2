@@ -85,32 +85,32 @@ public class TabTuile
 		}
 		TabJeu[ligne.get(index)][colone.get(index)]= nbPop;
 	}
-	
+
 	public void MoveLeft()
 	{
-		int k;
 		for(int i=0;i<dimention;i++)
 		{
 			for(int j=1;j<dimention;j++)
 			{
 				if(TabJeu[i][j]!=0)
 				{
-					if(	)
-					if(TabJeu[i][j-1]==TabJeu[i][j])
+					if(TabJeu[i][j-1]==0)
 					{
-						TabJeu[i][j-1]=TabJeu[i][j]*2;
-						TabJeu[i][j]=0;
-						for(k=j;k<dimention-1;k++)
+						int k = j;
+						while(k>0)
 						{
-							TabJeu[i][k]=TabJeu[i][k+1];
-							TabJeu[i][k+1]=0;
+							if(TabJeu[i][k-1]==0)
+							{
+								TabJeu[i][k-1]= TabJeu[i][k];
+								TabJeu[i][k]=0;
+								k--;
+							}
 						}
 					}
 				}
 			}
-		}	
+		}
 	}
-	
 	
 	public static void main(String[] args)
 	{
