@@ -1,38 +1,58 @@
 package test2048;
+
+import java.awt.FlowLayout;
 import java.util.Scanner;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class Test2048 
 {
 	public static void main(String[]args)
 	{
+		JFrame f = new JFrame();
+		f.setVisible(true);
+		f.setTitle("2048");
+		f.pack();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.getContentPane().setLayout(new FlowLayout());
+		f.getContentPane().add(new JButton("my First JButton"));
+		Scanner dim = new Scanner(System.in);
+		Scanner choix = new Scanner(System.in);
 		int dimention;
-		char chx = '0';
+		char chx = '1';
 		do
 		{
 			System.out.print("Dimention du 2048 : ");
 			try
 			{
-				Scanner dim = new Scanner(System.in);
 				dimention = dim.nextInt();
-				dim.close();
 			}
 			catch(Exception e)
 			{
-				System.out.println("Dimention incorect dimention 4 utilisé par défaut!!!");
+				System.out.println("Dimention incorect dimention 4 cases sur 4 utilisé par défaut!!!");
 				dimention = 4;
 			}
 			TabTuile Game = new TabTuile(dimention);
+			TabTuile Save = new TabTuile(dimention);
+			Save.setTab(Game);
 				do
 				{
-					Game.popTuiles();
-					Game.popTuiles();
+					if(chx=='1'||chx=='2'||chx=='g'||chx=='G'||chx=='d'||chx=='D'||chx=='b'||chx=='B'||chx=='h'||chx=='H')
+					{
+						if(Game.CheckMove(Save))
+						{
+							Game.popTuiles();
+							Game.popTuiles();
+						}
+					}
 					Game.affichTab();
+					Save.setTab(Game);
 					if(Game.MovePossible())
 					{
 						System.out.println(" 'g'->Gauche \n 'd'->Droite \n 'b'->Bas \n 'h'->Haut");
 						System.out.println(" '1'->reset \n '2'->Nouvelle Partie \n '3'->Quitter \n" );
-						Scanner choix = new Scanner(System.in);
-						switch (choix.next().charAt(0))
+						chx = choix.next().charAt(0);
+						switch (chx)
 						{
 							case '1' :
 								Game.reset();
@@ -55,17 +75,17 @@ public class Test2048
 								Game.MoveDown();
 								break;
 							default :
-								System.out.println("Choix non disponible");
+								System.out.println("\n Choix non disponible");
 								break;
 						}
-						choix.close();
 					}
 					else
 					{
 						System.out.println("Plus de mouvelent disponible");
-						chx='2';
 					}
-				}while(chx!='2');
+				}while(chx!='2' && chx !='3');
 		}while(chx!='3');
+		dim.close();
+		choix.close();
 	}
 }

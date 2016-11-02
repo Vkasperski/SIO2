@@ -1,21 +1,11 @@
 package test2048;
 
-import java.awt.FlowLayout;
 import java.util.Scanner;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 
 public class Test2048 
 {
 	public static void main(String[]args)
 	{
-		JFrame f = new JFrame();
-		f.setVisible(true);
-		f.setTitle("2048");
-		f.pack();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().setLayout(new FlowLayout());
-		f.getContentPane().add(new JButton("my First JButton"));
 		Scanner dim = new Scanner(System.in);
 		Scanner choix = new Scanner(System.in);
 		int dimention;
