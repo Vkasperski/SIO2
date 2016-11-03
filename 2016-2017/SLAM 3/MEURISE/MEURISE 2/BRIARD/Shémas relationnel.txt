@@ -1,0 +1,30 @@
+CLIENT(NoCli, NomCli, RueCli, CPCli, VilleCli, CodeType, RemiseCE, EncoursCommande, ReleveFacture)
+CP : NoCli
+
+CONTENTIEUX(NoCli, NumOrdre, MontantCont, libCont, DateOuv, DateClot, DateEnvSte, AvisCont)
+CP : NoCli, NumOrdre
+CE : NoCli en reference à NoCli de cLIENT
+
+RECOUVREMENT(NoSteRec,NomSoc,NoTelSte)
+CP : NoSteRec
+
+AGENT(matricule, nom, prenom)
+CP : matricule
+
+DOCUMENT(codeDoc, NomDoc, descDoc, NivSignature)
+CP: CodeDoc
+
+ENVOYER(CodeDoc, NoCli, NumOrdre,DateEnvoie)
+CP : CodeDoc, NoCli, NumOrdre,DateEnvoie
+CE : -  CodeDoc en reference à CodeDoc de DOCUMENT
+     -	NoClient, NumOrdre en reference à NoClient, NumOrdre de CONTENTIEUX
+
+S'OCCUPER(NoSterRec, NoCli, NumOrdre)
+CP : NoCli, NumOrdre
+CE : -	NoCli,numOrdre en Reference à NoCli,numOrdre de CONTENTIEUX
+     -  NoSteRec en reference à NoSteRec de RECOUVREMENT
+
+SUIVRE(Matricule, NoCli, NumOrdre)
+CP : NoCli, NumOrdre
+CE : -	NoCli,numOrdre en Reference à NoCli,numOrdre de CONTENTIEUX
+     -  Matricule en reference à Matricule de AGENT
