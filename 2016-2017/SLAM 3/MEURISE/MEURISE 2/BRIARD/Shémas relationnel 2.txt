@@ -1,0 +1,40 @@
+LIGNE DE DEMANDE(Ref,NumDemande,qtePreparation)
+Clé Primaire : Ref, NumDemande
+Clé Etrangère: Ref en reference à Ref de ARTICLE
+	       NumDemande en reference à NumDemande de PREPARATION
+
+
+
+PREPARATEUR(MatriculeP, NomP, PrenomP)
+Clé Primaire : Matricule
+
+
+PREPARER(Ref,NumDemande, MatriculeP)
+Clé Primaire : Ref, NumDemande
+Clé Etrangère: Ref, NumDemande en reference à Ref, NumDemande de LIGNE DE DEMANDE
+
+
+ARTICLE(Ref,Designation, PrixVente)
+clé primaire : Ref
+
+
+PRODUIT FINI(Ref,PrixRevient)
+clé Primaire : Ref
+Clé Etrangère: Ref en reference à Ref de ARTICLE
+
+
+PIECE DETACHEE(Ref, Prix_Achat_Moy,QteStock,SeuilReapro)
+clé Primaire : Ref
+Clé Etrangère: Ref en reference à Ref de ARTICLE
+
+
+CONSTITUER(Ref_Constitué, Ref_Constitué, Qte_Prod)
+Clé Primaire : Ref_Constitué, Ref_Constituant
+clé étrangère: Ref_Constitué en reference à Ref de PRODUIT FINI
+	       Ref_Contituant en reference à Ref de PRODUIT FINI
+
+
+GAMME(NumG, LibelléG, RefPF)
+clé Primaire : NumG
+Clé étrangère :RefPF en reference à Ref de PRODUIT FINI
+
