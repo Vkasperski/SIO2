@@ -11,7 +11,7 @@ public class Test2048
 	public static void main(String[]args)
 	{
 		Scanner dim = new Scanner(System.in);
-		Scanner choix = new Scanner(System.in);
+		Scanner choix = new Scanner(System.in); 
 		int dimention;
 		char isWin='0';
 		char chx = '1';
