@@ -10,7 +10,7 @@ public class Test2048
 {
 	public static void main(String[]args)
 	{
-		Scanner dim = new Scanner(System.in);
+		/*Scanner dim = new Scanner(System.in);
 		Scanner choix = new Scanner(System.in); 
 		int dimention;
 		char isWin='0';
@@ -93,6 +93,23 @@ public class Test2048
 				}while(chx!='2' && chx !='3');
 		}while(chx!='3');
 		dim.close();
-		choix.close();
+		choix.close();*/
+		TabTuile Game = new TabTuile(10);
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.popTuiles();
+		Game.affichTab();
+		Game.TurnTable();
+		System.out.println("\n\n\n");
+		Game.affichTab();
 	}
 }

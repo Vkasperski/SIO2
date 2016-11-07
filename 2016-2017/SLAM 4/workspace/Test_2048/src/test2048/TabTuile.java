@@ -70,6 +70,19 @@ public class TabTuile
 		}
 	}
 	
+	public void TurnTable()
+	{
+		int[][] newArray = new int[dimention][dimention];
+	    for(int i = 0; i < dimention;i++) 
+	    {
+	       for(int j = 0; j < dimention; j++) 
+	       {
+	          newArray[i][j] = TabJeu[dimention - j - 1][i];
+	       }
+	    }
+	    TabJeu = newArray;
+	}
+	
  	public void affichTab()
 	{
 		for(int i=0; i<dimention;i++)
