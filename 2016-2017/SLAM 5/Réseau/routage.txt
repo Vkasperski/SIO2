@@ -1,0 +1,1321 @@
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+---------------- Petit cours sur le routage -------------------
+
+
+Auteur: Toto <j_bond@laposte.net>
+Disponible sur <http://www.lalitte.com/routage>
+Dernière mise à jour 07/07/03 (version précédente 03/07/03)
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+Les phrases/paragraphes ajoutés et/ou modifiés sont précédés 
+du caractère "|".
+
+
+Sommaire
+--------
+
+ 1 - Introduction
+   1.1 - Objet de ce cours
+   1.2 - Prérequis
+   1.3 - Réutilisation de ce cours
+   1.4 - Décharge
+   1.5 - Votre travail.
+
+ 2 - Une communication, comment ca marche ?
+   2.1 - Que faut-il pour dialoguer ?
+   2.2 - Analogie de la parole
+   2.3 - Et Internet dans tout ça ?
+
+ 3 - Définitions
+   3.1 - Le modèle OSI
+   3.2 - L'encapsulation
+   3.3 - Retour à Internet
+
+ 4 - La couche physique (couche 1)
+   4.1 - Le rôle de la couche 1
+   
+ 5 - La couche liaison de données (couche 2)
+   5.1 - Les rôles de la couche 2
+   5.2 - L'adressage des machines
+   5.3 - Le protocole Ethernet
+   5.4 - Format d'une trame Ethernet
+   5.5 - Dialogue entre deux machines
+
+ 6 - La couche réseau (couche 3)
+   6.1 - Les rôles de la couche 3
+   6.2 - Quelles adresses pour la couche 3 ?
+   6.3 - Pourquoi encore une adresse alors que nous avons déjà
+         l'adresse MAC ?
+   6.4 - Comment déterminer qu'une machine est sur mon 
+         réseau ?
+   6.5 - Qu'est ce que la table de routage ?
+   6.6 - Qu'est-ce qu'une route par défaut ?
+   6.7 - Mais si l'on met une route par défaut, peut-on en 
+         mettre plusieurs ?
+   6.8 - Puis-je mettre l'adresse d'un routeur n'étant pas sur
+         mon réseau comme passerelle ?
+   6.9 - Vu que ma machine a plusieurs interfaces, dois-je
+         avoir plusieurs tables de routage ?
+   6.10 - Format d'un datagramme IP 
+   6.11 - Cas particulier des liaisons point à point
+
+ 7 - Les intéractions entre les couches 2 et 3
+   7.1 - Trame et datagramme, qu'est-ce qui circule sur le
+         réseau ?
+   7.2 - L'organisation de l'encapsulation
+   7.3 - Qu'est-ce que le protocole ARP ?
+
+ 8 - Dialogue entre deux machines distantes
+   8.1 - Présentation du dialogue
+   8.2 - Emission du message par A
+   8.3 - Réception du message par le routeur 1 intermédiaire
+   8.4 - Réception du message par la machine B
+   8.5 - Quelques remarques
+
+ 9 - Mini lexique
+   9.1 - Adresse IP
+   9.2 - Réseau logique
+   9.3 - Connexion/interconnexion
+   9.4 - Sous-réseau
+   9.5 - ARP
+
+ 10 - Annexes
+   10.1 - Ressources utilisées
+   10.2 - Remerciements
+   10.3 - Versions HTML, latex, pdf et doc disponibles
+   10.4 - Faq sur la NAT
+   10.5 - Faq sur les masques de sous-réseau
+ 
+ 11 - Conclusion
+
+
+          =========================
+
+
+1 - Introduction
+----------------
+
+  1.1 - Objet de ce cours
+
+   Le but de ce document est de vous présenter comment les 
+   informations peuvent transiter d'un ordinateur à l'autre
+   sur Internet.
+   Nous nous limiterons aux aspects réseau du dialogue. Tous
+   les aspects applicatifs seront donc mis de coté (gestion
+   des noms de machines, protocoles applicatifs, etc.)
+   L'étude se limitera donc aux couches 2 et 3 du modèle OSI,
+   soit Ethernet et IPv4 dans notre cas.
+   Oups... ces mots sont du charabia pour vous, je vous invite
+   alors à continuer la lecture du document qui vous 
+   présentera plus en détail chacun de ces concepts évoqués.
+   
+ 
+  1.2 - Prérequis
+
+   Pour une meilleure compréhension de ce cour, il sera 
+   nécéssaire d'avoir quelques bases en ce qui concerne 
+   l'adressage IPv4 et les sous-réseaux.
+   Pour cela, je vous conseillerai la lecture de la faq sur 
+   les masques de sous réseau disponible là:
+   <http://www.lalitte.com/masques>
+
+
+  1.3 - Réutilisation de ce cours
+
+   Vous êtes libre d'utiliser de courts extraits de ce 
+   cours, dans la mesure où vous incluez un lien permettant 
+   d'avoir accès à l'ensemble du document. Ceci dans le but de 
+   permettre à vos lecteurs d'obtenir facilement un complément 
+   d'information.
+   De même, vous êtes libre de copier ce cours dans son
+   intégralité, à condition cependant d'en avertir l'auteur,
+   et que cette utilisation soit exempte de tout caractère 
+   commercial (bannières publicitaires incluses). Cette 
+   restriction étant principalement due au plus élémentaire
+   des respects : celui du temps que j'ai consacré à la 
+   rédaction de ce cours.
+   Toute autre utilisation devra faire l'objet d'un accord 
+   préalable avec l'auteur.
+
+
+  1.4 - Décharge
+
+   L'auteur décline toute responsabilité concernant la 
+   mauvaise utilisation ou compréhension du document qui 
+   engendrerait l'écroulement de votre réseau ;-)
+
+
+  1.5 - Votre travail
+
+   La seule et unique tâche que je vous demanderai
+   d'accomplir sera de corriger mes erreurs (aussi bien dans
+   la cohérence des éléments avancés que pour l'orthographe), 
+   me donner des conseils sur ce qui est mal expliqué pour le 
+   rendre plus accessible, ajouter des éléments qui ont 
+   trait aux masques et rendent l'exposé plus complet, 
+   combler tout manque pour améliorer ce cours.
+
+   Mais maintenant, entrons dans le vif du sujet...
+
+
+2 - Une communication, comment ca marche ?
+------------------------------------------
+
+  2.1 - Que faut-il pour dialoguer ?
+
+   "Peux tu me passer le sel s'il te plait ?"
+   "Oui, tiens, le voici"
+   Il apparait souvent très simple de dialoguer, cependant,
+   un dialogue nécessite une multitude de normes à mettre en
+   place pour que chacun puisse s'exprimer et comprendre
+   l'autre.
+   "Peux tu me passer le sel s'il te plait ?"
+   "Excuse me, but I don't understand what you're talking 
+   about"
+   "Pardon ? je te demande le SEL ! tu me comprends pas ou 
+   quoi ?"
+   Et bien non, il ne comprend pas puisqu'ils n'utilisent
+   pas le même moyen pour communiquer.
+
+   On voit donc qu'il est nécessaire de se mettre d'accord
+   sur des normes pour pouvoir dialoguer.
+   
+
+  2.2 - Analogie de la parole
+
+   Nous avons vu précédemment que deux personnes devaient 
+   utiliser la même langue pour se comprendre, ou du moins,
+   que chacun d'eux comprenne la langue utilisée par l'autre.
+   Mais le dialogue par la parole ne se limite pas à cela.
+   Le dialogue met en place deux interlocuteurs, chacun à 
+   leur tour émetteur puis recepteur. Ils doivent donc avoir 
+   chacun un moyen d'écouter, et un moyen de parler. Il faudra
+   par ailleurs un moyen de transmission de l'information.
+
+   L'émetteur sera les cordes vocales. Le recepteur le 
+   tympan. Le moyen de transmission sera les ondes sonores. Le
+   support de transmission sera l'air. Il faudra aussi se 
+   mettre d'accord sur une langue à utiliser, qui elle-même
+   sera régie par des règles, etc.
+
+   Nous voyons donc qu'il est nécessaire de mettre en place 
+   tout un nombre de normes pour communiquer.
+
+
+  2.3 - Et Internet dans tout ça ?
+
+   Effectivement, vous ne voyez peut-être toujours pas le 
+   rapport que tout cela peut avoir avec Internet ?
+   Et bien de la même façon que nous communiquons par la 
+   parole, nous souhaitons faire communiquer des machines par
+   Internet.
+   Si l'on suit le même raisonnement que précédemment, il 
+   apparait necessaire de mettre en place des normes 
+   permettant de décrire la façon dont les ordinateurs vont 
+   communiquer entre eux.
+
+   Et effectivement, lors de la création d'Internet, un modèle
+   décrivant les normes à mettre en place a été choisi, il 
+   s'agit du modèle OSI (open systems interconnection)   
+    
+
+3 - Définitions
+---------------
+
+   Ce chapître va nous permettre de présenter plusieurs 
+   notions qu'il sera nécessaire de bien comprendre pour
+   pouvoir poursuivre la lecture du cours sans problèmes.
+
+
+  3.1 - Le modèle OSI
+
+   En se basant sur les observations précédentes, on voit que 
+   chacun des éléments en jeu (tympans, cordes vocales, etc,.)
+   remplit une tâche particulière. Le modèle OSI est basé sur
+   ce principe. Il part de l'observation des tâches que nous 
+   avons à accomplir et associe ces tâches à des couches.
+   Le modèle est organisé en sept couches ayant chacune un ou
+   plusieurs rôles précis.
+ 
+   Représentation:
+
+   Couche 7: Application
+   Couche 6: Présentation
+   Couche 5: Session
+   Couche 4: Transport
+   Couche 3: Réseau
+   Couche 2: Liaison de données
+   Couche 1: Physique
+
+   Chaque couche a donc un rôle précis séparé des autres. Les
+   couches peuvent communiquer avec les couches directement 
+   adjacentes (la couche 2 pourra avoir des échanges avec les
+   couches 1 et 3)
+   Ainsi, l'utilisation de l'ensemble de ces couches permet de 
+   réaliser une suite de tâches qui, regroupées, permettent
+   la communication.
+
+   Un message à envoyer parcourt les couches de la couche 7 à 
+   la couche 1 qui représente le support de transmission.
+   L'analogie avec la parole serait le cerveau qui crée le
+   message de la couche 7, jusqu'au support de transmission
+   qui est l'air et qui représente la couche 1. Tout cela
+   en passant par les couches intermédiaires représentées par
+   les nerfs, les cordes vocales, les ondes, etc.
+   Chacune des couches formate donc bien le message et 
+   l'envoit à la couche suivante (du cerveau aux nerfs, des
+   nerfs aux cordes vocales, etc.)
+
+
+  3.2 - L'encapsulation
+
+   Au cours de son passage par chacune des couches, des 
+   informations relatives à chacune d'entre elles sont 
+   ajoutées pour lui permettre d'effectuer la tâche qui lui 
+   incombe, on appelle cela l'en-tête.
+   Cela permet d'avoir un certain nombre d'informations 
+   nécessaires à chaque couche pour effectuer son travail, et 
+   que ces informations circulent avec le message à 
+   transmettre.
+
+            ++++++++++++++++++++++   
+   couche 7 | Info à transmettre |
+            ++++++++++++++++++++++
+
+            +++++++++++++++++++++++++++++++++++++++++
+   couche 6 | en-tête couche 6 | Info à transmettre |
+            +++++++++++++++++++++++++++++++++++++++++
+
+            ++++++++++++++++++++++++++++++++++++++++++++++
+   couche 5 | en-tête 5 | en-tête 6 | Info à transmettre |
+            ++++++++++++++++++++++++++++++++++++++++++++++
+
+   ... et ainsi de suite ... jusqu'au paquet final
+ 
+            ++++++++++++++++++++++++++++++++++++++++++++++
+   Couche 1 | en-tête 1 | ... | e-t 5 | en-tête 6 | Info | 
+            ++++++++++++++++++++++++++++++++++++++++++++++
+
+   Chaque couche ajoute donc sa propre en-tête à 
+   l'information d'origine. Ce procédé s'appelle 
+   l'encapsulation. Ces notions seront présentées plus en 
+   détail par la suite.
+   Lorsqu'une machine reçoit le message, il parcourt les 
+   couches dans le sens inverse, de la couche 1 à la couche 7
+   qui représente l'application qui doit recevoir le message.
+   De la même façon que lors de la réception d'un message
+   auditif (ondes transportées par l'air, qui font vibrer les 
+   tympans, les tympans envoient l'information reçue par 
+   l'intermédiaire des nerfs au cerveau)
+   
+
+  3.4 - Retour à Internet
+
+   Maintenant que nous connaissons le modèle en couche et les
+   principes qu'il représente, nous allons pouvoir nous
+   pencher sur l'implémentation de ce modèle en couches pour
+   la communication de machines sur Internet.
+
+   Dans ce document, nous présenterons les couches 2 et 3 qui
+   permettent d'acheminer les données d'un ordinateur à un 
+   autre. La couche 2 permet à deux machines directement 
+   connectées de dialoguer, on dit alors que les machines 
+   sont sur un même réseau (avec la définition de réseau 
+   présentée dans le lexique) La couche 3 permet le dialogue 
+   entre réseaux, ce que l'on appelle le routage.
+
+   On remarque ainsi que deux machines sur un même réseau 
+   pourront dialoguer directement, mais pour parler à une
+   machine située sur un réseau distant, il faudra passer par
+   des machines intermédiaires qui feront la liaison entre 
+   les réseaux (on appelera ces machines intermédiaires des 
+   routeurs)
+
+
+4 - La couche physique (couche 1)
+---------------------------------
+
+  4.1 - Le rôle de la couche 1
+
+   Nous ne nous attarderons pas longtemps sur la couche 1
+   car son rôle est simple et ne demande pas de connaissance
+   particulières (du moins, si l'on n'entre pas dans les 
+   détails ;-)
+
+   La couche 1 concerne le support physique de transport des
+   données. Cela peut aller du simple câble transportant un
+   signal électrique, à la fibre optique, en passant par les
+   ondes radio. Le rôle de la couche 1 est donc d'offrir un
+   support de transmission permettant d'acheminer les données
+   d'un point à un autre.
+   
+
+5 - La couche liaison de données (couche 2)
+-------------------------------------------
+ 
+  5.1 - Les rôles de la couche 2
+
+   La couche liaison de données a pour rôle de transmettre les
+   données de façon fiable entre des équipements directement 
+   connectés. D'autres rôles lui incombent, mais leur 
+   connaissance ne nous sera pas utile pour comprendre le
+   transport des informations.
+
+   Nous allons donc voir dans ce chapitre comment deux
+   machines directement liées vont faire pour dialoguer.
+   Sur un réseau, il y a souvent plusieurs machines 
+   connectées, il faut alors pouvoir les différencier les unes
+   par rapport aux autres. Pour cela, nous allons les 
+   identifier individuellement grâce à des adresses.
+
+
+  5.2 - L'adressage des machines
+
+   Pour la couche 2, ce sont les adresses MAC.
+   Les adresses MAC sont codées sur 6 octets, soit 48 bits
+   donc 2^48 = ... plusieurs milliers de milliards d'adresses
+   possibles !
+   Elles sont la plupart du temps écrites par octet sous 
+   forme hexadecimale, séparés par le caractère ":"
+   Ce qui donne par exemple 3C:AB:35:48:FF:D2 qui est une
+   adresse MAC.
+
+   Nous pouvons ainsi identifier chaque interface de machine 
+   individuellement. Il nous faut maintenant définir les 
+   règles qui permettront aux machines de dialoguer. Pour cela
+   nous allons définir un protocole.
+
+
+  5.3 - Le protocole Ethernet
+
+   Le protocole Ethernet définit le format des messages 
+   échangés. Le message de base utilisé par Ethernet est la
+   trame. La trame est composée d'une en-tête et d'une "charge 
+   utile" contenant les informations à transmettre.
+   L'en-tête Ethernet contient les informations nécessaires 
+   au bon fonctionnement de la couche 2 qui pourront permettre
+   la transmmission des informations. Nous y retrouvons
+   notamment les adresses MAC des machines participant au 
+   dialogue.
+   
+
+  5.4 - Format d'une trame Ethernet
+   
+   La description suivante ne prend en compte que les 
+   informations qui nous intéressent et n'est pas le format
+   complet d'une trame Ethernet.
+   La trame est composée d'une en-tête contenant les 
+   informations du protocole Ethernet, et d'un payload 
+   contenant les informations à transporter.
+
+                     Trame Ethernet
+   ++++++++++++++++++++-----------------------------
+   | En-tête Ethernet | Informations à transporter |
+   ++++++++++++++++++++-----------------------------
+
+   Nous allons voir plus en détail ce que contient l'en-tête 
+   Ethernet.
+
+                     En-tête Ethernet
+   ++++++++++++++++++++++++++++++++++++++++++++++++++++   
+   | @ MAC source | @ MAC destination | Protocole sup |
+   ++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   L'adresse MAC source est l'adresse de la machine qui 
+   envoit la trame.
+   L'adresse MAC destination est celle de la machine qui doit
+   recevoir la trame (jusqu'ici ce n'est pas bien sorcier :-)
+   Le protocole sup est le protocole utilisé par la couche
+   supérieure (la couche 3 dans notre cas puisque Ethernet est
+   un protocole de couche 2) Ceci est utile car quand la 
+   couche 2 reçoit le message, elle doit savoir à quel 
+   protocole de couche 3 envoyer les informations reçues (il
+   est possible sur une machine d'utiliser plusieurs 
+   protocoles pour une même couche)
+   
+
+  5.5 - Dialogue entre deux machines
+
+   Prenons l'exemple d'une machine A qui veut envoyer le 
+   message "Bonjour" à une machine B située sur le même 
+   réseau.
+   Il lui suffit de connaître l'adresse MAC de B pour lui 
+   envoyer le message.
+   Ainsi, en lui envoyant la trame suivante, elle devrait 
+   pouvoir lui envoyer le message:
+
+   ++++++++++++++++++++++++++++++++++------------------
+   | @MAC A| @MAC B | protocole sup | XXXXX | Bonjour |
+   ++++++++++++++++++++++++++++++++++------------------
+
+   B reçoit la trame et voit que c'est son adresse MAC qui est
+   en destination, elle lit donc le reste des informations.
+   Il s'agit des informations des couches supérieures (XXXXX),
+   et enfin, du message "Bonjour"
+
+   Nous avons donc réussi grâce à la couche 2 à faire 
+   dialoguer deux machines connectées sur un même réseau.
+   Nous allons maintenant voir comment faire communiquer 
+   deux machines appartenant à des réseaux différents.
+
+
+6 - La couche réseau (couche 3)
+-------------------------------
+
+  6.1 - Les rôles de la couche 3
+
+   La couche réseau a pour rôle d'acheminer les informations
+   d'un réseau à un autre. C'est ce que l'on appelle le 
+   routage. Les réseaux sont donc reliés entre eux par des
+   machines que l'on appelle routeurs. Ces routeurs vont
+   donc recevoir les paquets sur un réseau, et les renvoyer
+   sur l'autre. Ils ont donc une connexion sur chaque réseau.
+   Tous les réseaux ne pouvant pas être reliés entre eux, il
+   va souvent falloir passer par des réseaux intermédiaires
+   pour pouvoir envoyer un paquet d'un réseau à un autre.
+
+   La couche réseau a d'autres fonctionnalités auxquelles nous
+   ne nous intéresserons pas ici.
+
+   Principe de fonctionnement:
+
+   Machine A                                    Machine B
+       |                                            |
+   ----------            ----------            ----------
+   |Réseau 1|--Routeur1--|Réseau 2|--Routeur2--|Réseau 3|
+   ----------            ----------            ----------
+
+   Lorsque la machine A veut envoyer un message à B, le paquet
+   va d'abord passer par le réseau 1. Puis le routeur 1 qui 
+   est connecté à ce réseau va le récupérer pour le renvoyer 
+   vers le réseau 2, et ainsi de suite jusqu'au réseau 3 où la
+   machine B va pouvoir le recevoir.
+
+   Cela est bien joli, mais comment ca marche ? Comment le 
+   routeur 1 sait-il qu'il faut envoyer le paquet sur le 
+   réseau 2 pour qu'il puisse atteindre B ???
+   Et puis on sait maintenant envoyer une trame d'une machine
+   à une autre sur un même réseau, mais sur deux réseaux 
+   différents ?
+
+   Nous allons essayer de répondre à ces questions dans les 
+   paragraphes suivant.
+
+
+  6.2 - Quelles adresses pour la couche 3 ?
+
+   Je vous invite à lire le paragraphe 2.2 de la faq sur les
+   masques pour comprendre l'intérêt de l'adresse IP et du
+   masque qui lui est associé. 
+   Une adresse IP est donc codée sur 4 octets. Elle s'écrit 
+   en décimal séparés par des points. Par exemple, 192.168.0.1
+   est une adresse IP.
+
+   
+  6.3 - Pourquoi encore une adresse alors que nous avons déjà
+        l'adresse MAC ?
+
+   Il est nécessaire de différencier les adresses de couche 2
+   et de couche 3, car l'adressage au niveau de chacune de ces
+   couches n'a pas le même rôle.
+   L'adressage MAC en couche 2 permet d'identifier les 
+   machines SUR UN MEME RESEAU.
+   L'adressage IP en couche 3 permet d'adresser les machines 
+   SUR DES RESEAUX DISTINCTS.
+
+   Peut-on alors utiliser pour ces deux couches une seule de
+   ces deux adresses ? 
+
+   La réponse est malheureusement non.
+   Les adresses de couche 2 sont en rapport avec le matériel 
+   réseau utilisé (le protocole de couche 2 est géré au niveau 
+   de la carte connectée au réseau et non pas par le système 
+   d'exploitation comme les couches supérieures) il est donc 
+   difficile de modifier les adresses MAC qui sont censées 
+   être codées directement sur la carte réseau.
+   Cela est notamment du au fait que chaque adresse MAC doit
+   être unique sous peine de conflit matériel, et que cette 
+   adresse doit être accessible très tôt lors du boot d'une
+   machine.
+   Les adresses de couche 3 quant à elles demandent une 
+   certaine souplesse d'utilisation car on ne connait pas à
+   priori l'adresse du réseau sur lequel une machine va se 
+   trouver.
+
+   Il y a donc une incompatibilité d'utilisation d'une 
+   adresse de couche 2 pour une adresse de couche 3, et vice
+   versa. 
+   
+   Enfin, les protocoles réseau évoluant au fil du temps, il
+   est nécessaire que chaque couche soit indépendante des 
+   autres.
+   Il y a d'autres raisons qui nous obligent à utiliser des
+   adresses différentes pour des couches différentes, mais
+   ceci n'étant pas partie intégrante du sujet, nous ne nous
+   y attarderons pas ici, d'autant plus que les arguments
+   présentés devraient vous avoir convaincus :-)
+
+
+  6.4 - Comment déterminer qu'une machine est sur mon réseau ?
+
+   Si vous avez compris la faq sur les masques de sous réseau,
+   vous savez que le masque permet notamment à une machine de
+   savoir quelles sont les autres machines de son réseau.
+   Ainsi, quand une machine veut dialoguer avec une autre, 
+   elle va d'abord regarder si cette machine est sur son 
+   propre réseau, ou si elle va devoir passer par des routeurs
+   intermédiaires pour lui envoyer son paquet.
+
+   Ceci va être possible grâce à la table de routage.
+
+  
+  6.5 - Qu'est ce que la table de routage ?
+
+   La table de routage est un regroupement d'informations
+   permettant de déterminer le prochain routeur à utiliser 
+   pour accéder à un réseau précis sur lequel se trouvera la
+   machine avec laquelle nous souhaitons dialoguer.
+
+   Ainsi, si l'on reprend l'exemple du §6.1, le routeur 1 doit
+   savoir que pour atteindre le réseau 1, il devra envoyer
+   les informations sur son interface de gauche sur le schéma,
+   que pour atteindre le réseau 2, il devra envoyer les 
+   informations sur son interface de droite, et enfin, pour
+   atteindre le réseau 3, il devra envoyer les informations 
+   sur son interface de droite vers le routeur 2.
+
+   La table de routage doit pouvoir regrouper toutes ces
+   informations. Elle les regroupe par ligne en indiquant
+   pour un réseau donné par où il faut passer.
+
+   Pour le routeur 1 par exemple, sa table de routage doit
+   être:
+
+   vers réseau 1 -> utiliser interface gauche
+   vers réseau 2 -> utiliser interface droite
+   vers réseau 3 -> utiliser interface gauche vers routeur 2 
+
+   En fait, la réalité est un peu plus précise. Les interfaces
+   peuvent être identifiés par leurs adresses ou leur type,
+   et les réseaux sont identifiés par l'adresse du réseau et
+   le masque associé.
+
+   Ainsi, cela se traduit en:
+ 
+   Réseau	Masque		Interface	Passerelle
+   192.168.0.0	255.255.255.0	ethernet 1	ethernet 1
+   172.16.0.0	255.255.0.0	ethernet 2	ethernet 2
+   10.0.0.0	255.0.0.0	ethernet 2	172.16.0.254
+
+   Où 192.168.0.0, 172.16.0.0 et 10.0.0.0 représentent les 
+   réseaux 1, 2 et 3. Et 172.16.0.254 représente l'adresse de
+   l'interface de gauche du routeur 2.
+   Ainsi, pour atteindre la machine d'adresse 10.0.0.45 située
+   sur le réseau 3, le routeur va voir dans la table de 
+   routage quelle entrée correspond au réseau contenant cette
+   adresse. Il s'agit du réseau 10.0.0.0/255.0.0.0, et pour 
+   atteindre ce réseau, il est dit d'envoyer le paquet par 
+   l'interface ethernet 2, vers l'adresse 172.16.0.254.
+   Et voilà !
+
+   Ce système semble très bien, mais on en voit vite les 
+   limites sachant que le réseau Internet est composé de 
+   plusieurs millions de réseaux... Cela voudrait dire qu'il
+   faut connaître la route vers chacun de ces réseaux pour 
+   pouvoir dialoguer avec eux.
+
+   Heureusement, une solution a été mise en place pour 
+   répondre à ce problème. Il s'agit de la route par défaut.
+   
+
+  6.6 - Qu'est-ce qu'une route par défaut ?
+
+   La route par défaut est la route qui sera utilisée 
+   lorsqu'aucune route spécifique pour aller vers la 
+   destination spécifiée n'aura été trouvée.
+   Ainsi, dans le cas précédent, si je voulais atteindre 
+   l'adresse 193.253.25.46, aucune entrée de ma table de 
+   routage ne m'aurait indiqué comment y aller... Ce qui fait
+   que ma machine n'aurait pas su vers qui envoyer le paquet
+   et qu'il serait allé directement à la poubelle :-(
+
+   En indiquant en plus une route par défaut, cela aurait 
+   permis à ma machine d'avoir une destination, même quand 
+   aucune entrée de la table de routage ne correspondait
+   à l'adresse demandée.
+   J'aurais donc envoyé mon paquet vers ma route par défaut,
+   en fait vers le prochain routeur à utiliser, et c'est 
+   ce prochain routeur qui se serait occupé de continuer à 
+   router le paquet. 
+   Si lui non plus n'avait pas eu de route spécifiée pour 
+   l'adresse de destination demandée, il aurait envoyé le 
+   paquet à son propre routeur par défaut, et ainsi de suite
+   jusqu'à tomber sur un routeur connaissant la route !
+
+   Cela peut sembler un peu aléatoire comme stratégie, mais
+   aujourd'hui, Internet est fait de telle façon que les 
+   routeurs qui le composent connaissent les routes vers 
+   toutes les destinations. Cela est mis en place grâce à des
+   protocoles évolués permettant d'échanger des informations 
+   de routage en temps réel ! Mais ceci sort un peu de notre
+   objectif :-)
+
+   La table de routage pour le routeur 1 devient alors:
+
+   Réseau	Masque		Interface	Passerelle
+   192.168.0.0	255.255.255.0	ethernet 1	ethernet 1
+   172.16.0.0	255.255.0.0	ethernet 2	ethernet 2
+   10.0.0.0	255.0.0.0	ethernet 2	172.16.0.254
+   défaut 	0.0.0.0		ethernet 2	172.16.0.254
+
+   Cette ligne peut parfois être aussi écrite:
+   0.0.0.0 	0.0.0.0		ethernet 2	172.16.0.254
+
+   NB: On peut se rendre compte dans notre exemple que la 
+       route vers le réseau 10.0.0.0 n'est plus nécessaire,
+       vu que la route par défaut pointe vers le même routeur.
+
+
+  6.7 - Mais si l'on met une route par défaut, peut-on en 
+        mettre plusieurs ?
+
+   Cela n'a pas d'intêret dans l'absolu, et sera traité 
+   différemment selon les sytèmes. Disons qu'une table de 
+   routage normale ne devrait avoir qu'une route par défaut.
+
+
+  6.8 - Puis-je mettre l'adresse d'un routeur n'étant pas sur
+        mon réseau comme passerelle ?
+
+   Non !
+   Et d'ailleurs, cela n'aurait pas de sens, puisqu'une 
+   passerelle est censée nous indiquer un chemin pour sortir 
+   de notre réseau. Si on indique l'adresse d'une machine en 
+   dehors de notre réseau, c'est que l'on en est déjà sorti !
+   
+   La conséquence est que les passerelles indiquées dans une
+   table de routage devront toujours appartenir à mon propre
+   réseau, ou du moins, à l'un des réseaux auxquels 
+   appartiennent mes interfaces, si j'en ai plusieurs.
+
+
+  6.9 - Vu que ma machine a plusieurs interfaces, dois-je
+        avoir plusieurs tables de routage ?
+
+   Là encore la réponse est non. La table de routage est 
+   censée contenir toutes les informations de routage pour 
+   votre machine (ou routeur) quel que soient le nombre 
+   d'interfaces. D'ailleurs, vous avez pu voir dans la table
+   de routage du routeur 1 que les routes contenaient des 
+   informations sur ses deux interfaces.
+
+   Il existe cependant des fonctions avancées de routage avec
+   plusieurs table, mais nous n'en sommes pas là ;-)
+
+   Mais maintenant que nous savons comment une machine fait
+   pour aiguiller un paquet, il nous reste à savoir quelles
+   informations de couche 3 ce paquet devra contenir pour
+   que le routage puisse être effectué. Le message de base
+   utilisé par IP est le datagramme.
+
+  
+  6.10 - Format d'un datagramme IP 
+
+   De la même façon qu'avec Ethernet, la couche IP (couche 3)
+   va nécessiter un certain nombre d'informations pour 
+   pouvoir effectuer les tâches qui lui icombent comme le 
+   routage. A la manière de la trame Ethernet, le datagramme 
+   IP se compose d'une en-tête IP, et d'un payload contenant
+   les informations à transporter.
+
+                        Datagramme IP
+   ********************-----------------------------
+   |    En-tête IP    | Informations à transporter |
+   ********************-----------------------------   
+
+   Nous allons voir plus en détail ce que contient l'en-tête
+   IP, même si nous ne décrivons pas l'ensemble de l'en-tête,
+   mais juste les informations qui nous intéressent.
+
+                     En-tête IP
+   ****************************************************   
+   | @ IP  source | @ IP  destination | Protocole sup |
+   ****************************************************
+ 
+   Celle-ci ressemble fort à ce que nous avons vu précédemment 
+   pour Ethernet, nous ne détaillerons donc pas son contenu.
+
+   Maintenant que nous avons décrit la couche 3, nous allons 
+   pouvoir voir plus en détail comment se fait l'interface 
+   avec la couche 2.
+
+
+  6.11 - Cas particulier des liaisons point à point
+
+   Il existe cependant des cas où l'utilisation d'une table de
+   routage est un peu différente, et où la précision d'une
+   passerelle n'est pas nécessaire 
+   C'est quand deux machines sont reliées directement l'une à 
+   l'autre. On parle alors de liaison point à point.
+   Dans ce cas, nous sommes sûrs qu'un paquet envoyé par une
+   des machines à une extrémité de la connexion va être reçu
+   par l'autre machine. Il suffit alors dans la table de 
+   routage de spécifier l'interface de sortie.
+
+
+7 - Les intéractions entre les couches 2 et 3
+---------------------------------------------
+
+  7.1 - Trame et datagramme, qu'est-ce qui circule sur le
+        réseau ?
+
+   Et bien oui, nous avons vu que les couches 2 et 3 avaient
+   chacune leur propre format de message utilisé pour 
+   transporter l'information, mais le quel des deux circule
+   vraiment sur le réseau ?
+   Si nous répondons la trame, cela voudra dire que notre 
+   trame sera contrainte de rester sur le réseau local, 
+   puisque la couche 2 ne permet pas d'aller d'un réseau à
+   l'autre.
+   Si nous répondons le datagramme, de la même façon, nous ne 
+   serons pas capables de dialoguer avec les machines de 
+   notre réseau, et donc pas avec les routeurs à utiliser 
+   pour aller vers d'autres réseaux.
+
+   Donc la réponse semble être: ni l'un ni l'autre...
+   Ou plutôt: l'un et l'autre !
+
+   Effectivement, nous avons parlé au §3.2 d'encapsulation
+   des informations. C'est exactement le principe qui va 
+   être utilisé ici. Les informations de couche 2 et 3 vont
+   être mises ensemble avec les informations à transmettre.
+   Le paquet ainsi formé contiendra ainsi l'ensemble des 
+   informations nécessaires au transport de l'information.
+   C'est donc une trame qui circulera sur le réseau, et cette
+   trame Ethernet contiendra le datagramme IP.
+
+    ++++++++++++++++++++++++++++++++++++++++++++++
+    | en-tête 2 | e-t 3 | ... | en-tête 6 | Info | 
+    ++++++++++++++++++++++++++++++++++++++++++++++
+                <--------- Datagramme IP -------->
+    <-------------- Trame Ethernet -------------->
+
+   Maintenant, comment est organisée cette encapsulation pour
+   que chaque couche retrouve facilement ses informations ?
+
+  
+  7.2 - L'organisation de l'encapsulation
+
+   Comme nous l'avons vu au §3.2, lors de l'émission d'une 
+   information, chaque couche ajoute son en-tête. Le paquet
+   final ainsi formé contient donc les informations de toutes 
+   les couches, ainsi que l'information d'origine. La dernière
+   couche ayant apporté son en-tête est la couche 2 (la couche
+   1 n'a pas besoin d'apporter de l'information, ou du moins,
+   cela est transparent pour nous)
+
+   Ainsi, quand le paquet arrive à sa destination, ce sont les
+   informations de couche 2 qui sont accessibles en premier, 
+   et ça tombe bien puique ce sont elles dont nous avons 
+   besoin en premier pour recevoir le message !
+   
+   La réception d'un message se passe donc ainsi:
+
+   La carte réseau de ma machine reçoit la trame suivante
+      
+            ++++++++++++++++++++++++++++++++++++++++++++++
+   Couche 2 | en-tête 2 | e-t 3 | ... | en-tête 6 | Info | 
+            ++++++++++++++++++++++++++++++++++++++++++++++
+
+   La couche 2 regarde l'adresse MAC de destination et si 
+   cela correspond bien à notre machine, elle envoit les 
+   informations à la couche 3 en prenant soin d'enlever 
+   l'en-tête Ethernet, qui ne servira plus.
+
+            ++++++++++++++++++++++++++++++++++++++++++++++
+   Couche 3 | en-tête 3 | e-t 4 | ... | en-tête 6 | Info | 
+            ++++++++++++++++++++++++++++++++++++++++++++++
+
+   De la même façon, la couche 3 regarde l'adresse IP de 
+   destination, et si cela correspond bien à UNE DES adresses
+   IP de notre machines, elle envoit les informations à la 
+   couche 4, et ainsi de suite.
+   Si par contre, le datagramme est à destination d'une autre 
+   adresse IP, notre machine va router ce paquet vers sa 
+   vraie destination (cela n'est vrai que si le routage est
+   activé sur la machine, mais c'est normalement le cas pour
+   un routeur :-)
+
+   En fin de chaîne, l'application impliquée dans le dialogue 
+   va recevoir les informations qu'elle attend:
+
+            ++++++++++++++++++++++   
+   couche 7 | Info à transmettre |
+            ++++++++++++++++++++++
+
+   Tout cela semble marcher parfaitement comme une machine 
+   bien huilée. Cependant, il nous manque encore quelques 
+   informations pour pouvoir avoir une compréhension globale
+   du fonctionnement du routage.
+   Par exemple, nous savons déterminer l'adresse IP du 
+   prochain routeur à utiliser, mais c'est de l'adresse MAC 
+   dont nous avons besoin pour dialoguer avec lui directement
+   sur notre réseau...
+   Il faut donc pouvoir récupérer une adresse MAC en fonction
+   d'une adresse IP. Pour cela, nous allons devoir utiliser 
+   un protocole particulier, dédié à cette fonction, que l'on
+   appelle ARP.
+
+
+  7.3 - Qu'est-ce que le protocole ARP ?
+
+   Le protocole ARP permet d'obtenir une adresse MAC en 
+   fonction d'une adresse IP.
+   
+   Reprenons notre problème.
+   Le routeur 1 veut envoyer un paquet vers l'adresse 
+   10.0.0.45 du réseau 3. Comme nous l'avons vu précédemment, 
+   le routeur regarde dans sa table de routage pour savoir
+   où il va devoir envoyer le paquet.
+   La table de routage lui dit que pour atteindre le réseau
+   10.0.0.0/255.0.0.0 qui contient l'adresse 10.0.0.45, il 
+   faut passer par le routeur dont l'une des adresses 
+   d'interface est 172.16.0.254.
+   Le nouveau travail du routeur est donc d'envoyer le paquet
+   vers 172.16.0.254.
+   Cette adresse IP étant sur son propre réseau (notre routeur
+   a une interface dans le réseau 172.16.0.0./255.255.0.0), il
+   faut connaître son adresse MAC pour pouvoir lui envoyer le 
+   paquet. Pour connaître son adresse MAC, l'idéal serait de 
+   lui demander, mais pour lui demander, il faudrait connaître 
+   son adresse MAC !!! 
+
+   Et on tourne en rond :-(
+   Vu qu'aucune autre machine du réseau n'est censée connaître
+   l'adresse MAC de 172.16.0.254, nous ne pouvons pas non plus
+   leur demander. Il faut donc trouver un moyen de s'adresser
+   à l'adresse MAC de 172.16.0.254 sans la connaître !
+
+   Et si vous vous rappelez bien du cours sur les masques de
+   sous réseau, vous avez peut-être deviné que nous avons un 
+   mécanisme à notre disposition nous permettant de faire 
+   cela... 
+   Il s'agit du principe de broadcast ! En envoyant ma 
+   question à tout le monde, je suis sûr que la machine 
+   172.16.0.254 va le recevoir.
+
+   Je peux donc envoyer à tout le monde ma requête ARP 
+   demandant:
+   - Qui a l'adresse IP 172.16.0.254 ? et quelle est son
+     adresse MAC ?
+   Toutes les machines reçoivent cette question, mais seule 
+   172.16.0.254 va me répondre:
+   - Je suis 172.16.0.254 et mon adresse MAC est 
+     04:CF:65:84:C5:E2
+
+   J'ai ainsi pu récupérer l'adresse MAC de 172.16.0.254, et 
+   je peux désormais lui envoyer le paquet à transmettre.
+   
+   Nous avons ainsi réussi à faire la liaison souhaitée entre
+   l'adresse IP connue et l'adresse MAC recherchée :-)
+
+   Une question se pose quand même, car si toutes les machines
+   doivent envoyer des messages à tout le monde à chaque fois
+   qu'elles souhaitent communiquer, on va vite encombrer le 
+   réseau...
+
+   Pour répondre à ce problème, ARP utilise une solution de 
+   cache local. C'est à dire que lorsqu'une requête ARP va 
+   être effectuée, la réponse à cette requête va être gardée
+   pendant un certain temps pour pouvoir être réutilisée.
+   Ce temps est paramétrable, et est souvent de l'ordre de 
+   quelques minutes.
+   Ainsi, si mes machines continuent de dialoguer ensemble,
+   il n'y aura plus besoin de faire des broadcasts ARP, il 
+   suffira d'aller chercher dans le cache ARP l'information.
+   
+   D'ailleurs, le fonctionnement de ARP veut que le système
+   aille d'abord regarder dans le cache ARP si l'information
+   s'y trouve, avant de faire le broadcast ARP (ce qui semble
+   normal :-)
+ 
+   Bon, et bien nous avons maintenant en notre possession 
+   toutes les connaissances devant nous permettre de 
+   comprendre en partie le dialogue entre deux machines 
+   distantes. Allons-y !
+
+
+8 - Dialogue entre deux machines distantes
+------------------------------------------
+
+  8.1 - Présentation du dialogue
+
+   Nous allons reprendre le même type de schéma que nous avons
+   vu précédemment, avec une machine A souhaitant envoyer un
+   message à une machine B sur Internet.
+
+   Machine A (193.25.25.25/24)   (232.32.32.32) Machine B
+       |                                            |
+   ----------            ----------            ----------
+   |Réseau 1|--Routeur1--|Internet|--Routeur2--|Réseau 3|
+   ----------            ----------            ----------
+
+   Interface gauche routeur 1: 193.25.25.254/24
+   Interface droite routeur 1: 140.40.40.14/28
+   La partie Internet n'est pas mise en détail mais représente 
+   quelques de routeurs successifs avant le routeur 2.
+
+   NB: Comme petit exercice, vous pouvez vous demander 
+       pourquoi je n'ai pas précisé le masque de sous réseau 
+       pour la machine B ?
+
+
+  8.2 - Emission du message par A
+
+   La machine A veut envoyer le message "bonjour" à B.
+   Comme nous l'avons vu à travers le modèle OSI, ce message
+   va traverser les différentes couches du modèle pour que 
+   chacune y apporte l'information nécessaire à  
+   l'accomplissement de sa tâche. Dans le modèle TCP/IP 
+   utilisé sur Internet, les couches 5 et 6 ne sont pas 
+   utilisées (on peut en déduire que les fonction effectuées 
+   par ces couches ne sont pas nécessaires, ou qu'elles sont
+   prises en charge par une autre couche) Le message passe 
+   donc par la couche 4 qui, une fois son en-tête ajoutée, 
+   envoit le paquet à la couche 3.
+   
+   La couche 3 reçoit le paquet (segment TCP) et l'adresse de 
+   destination 232.32.32.32. Elle va voir dans sa table de 
+   routage (celle de la machine sur laquelle on est, cad A) à
+   qui envoyer les informations.
+
+   Table de routage de A:
+   
+   Réseau	Masque		Interface	Passerelle
+   193.25.25.0	255.255.255.0	ethernet 1	ethernet 1
+   défaut 	0.0.0.0		ethernet 1	193.25.25.254
+
+   Elle n'a pas de route spécifique pour l'adresse 
+   232.32.32.32, ce sera donc la route par défaut qui sera 
+   utilisée.
+   A doit donc maintenant envoyer le paquet à l'interface
+   193.25.25.254 du routeur 1. A retourne voir dans sa table
+   de routage par quel interface sortir pour envoyer le
+   datagramme à 193.25.25.254.
+   Elle doit maintenant connaître l'adresse MAC de l'interface 
+   193.25.25.254. Pour cela, elle va voir dans son cache ARP
+   si elle ne trouve pas l'information. Si c'est le cas, elle
+   connait l'adresse MAC, sinon, il faut qu'elle fasse un 
+   broadcast ARP pour la trouver.
+   Maintenant que la couche 3 connait l'adresse MAC 
+   destination, elle peut envoyer le datagramme IP (en-tête IP
+   + segment TCP) et l'adresse MAC destination à la couche 2.
+
+                  En-tête IP
+   **************************************************--------
+   | IP SRC 193.25.25.25 | IP DST 232.32.32.32 | ps | infos |
+   **************************************************--------
+   <----------------------Datagramme IP--------------------->
+  
+   La couche 2 reçoit le datagramme et y ajoute son en-tête 
+   Ethernet. La trame est maintenant prête à être envoyée sur    
+   le réseau.
+
+                 En-tête Ethernet
+   ++++++++++++++++++++++++++++++++++++++++++++++++--------
+   | MACSRC MAC A | MACDST MAC 193.25.25.254 | ps | infos |
+   ++++++++++++++++++++++++++++++++++++++++++++++++--------
+   <---------------------Trame Ethernet------------------->
+
+   La trame circule sur le réseau jusqu'à sa destination qui
+   est l'adresse MAC de 193.25.25.254.
+
+
+  8.3 - Réception du message par le routeur 1 intermédiaire
+   
+   Le routeur 1 intermédiaire reçoit la trame. La couche 2 
+   regarde l'adresse MAC en destination, et comme c'est 
+   l'adresse MAC de l'interface 193.25.25.254, le datagramme
+   IP est envoyé à la couche 3.
+   
+   La couche 3 reçoit le datagramme et regarde l'adresse IP de 
+   destination. Ce n'est l'adresse d'aucune des interfaces du
+   routeur 1, donc le paquet devra être routé vers sa 
+   destination. Le routeur va donc voir sa table de routage 
+   pour voir vers qui renvoyer le paquet.
+
+   Table de routage du routeur 1:
+   
+   Réseau	Masque		Interface	Passerelle
+   193.25.25.0	255.255.255.0	ethernet 1	ethernet 1   
+   140.40.40.0	255.255.255.240	ethernet 2	ethernet 2
+   défaut 	0.0.0.0		ethernet 2	140.40.40.13
+
+   Il n'y a pas de route spécifique pour l'adresse 
+   232.32.32.32. C'est donc la route par défaut qui sera 
+   utilisée. 
+   La prochaine machine à qui envoyer le paquet est donc
+   140.40.40.13. Le routeur retourne voir dans sa table de 
+   routage par quel interface sortir pour atteindre 
+   140.40.40.13. C'est la seconde ligne de la table qui 
+   contient l'information et l'interface à utiliser est 
+   l'interface 2.
+   De la même façon que précédemment, il faut trouver son 
+   adresse MAC pour lui envoyer la trame contenant les 
+   informations nécessaires. On la trouve facilement grâce aux
+   macanismes ARP. Le routeur 1 peut donc envoyer la trame
+   vers le prochain routeur.
+
+   Nous n'allons pas détailler la suite, le passage par chaque 
+   routeur étant identique à celui-ci.
+
+   Les informations arrivent donc jusqu'au routeur 2 grâce
+   aux mécanismes de routage d'Internet :-)
+   Celui-ci va comme précédemment renvoyer le paquet qui ne 
+   lui est pas destiné vers la machine B qui est sur son 
+   réseau.
+
+
+  8.4 - Réception du message par la machine B
+
+   La trame arrive donc sur l'interface de la machine B.
+   L'adresse MAC en destination est bien celle de cette 
+   interface (Cette adresse MAC aura été trouvée grâce au 
+   mécanisme ARP mis en oeuvre par le routeur 2, vous suivez
+   bien ?)
+   La couche 2 renvoit donc le datagramme IP à la couche 3 IP.
+   La couche 3 reçoit le datagramme et regarde l'adresse IP de
+   destination. C'est bien l'adresse d'une des interfaces de 
+   la machine !
+   La couche 3 va donc pouvoir envoyer les informations à la
+   couche 4, qui enverra elle-même le message "bonjour" à
+   la couche 7 applicative.
+
+   Et hop, nous avons réussi ainsi à envoyer le message
+   "bonjour" de la machine A à la machine B !!! Magisme...
+
+   Bien sûr, certains points n'ont pas été détaillés et 
+   demandent des connaissances plus poussées pour pouvoir être
+   expliqués. Mais cela fera l'objet d'un autre cours ;-)
+
+
+  8.5 - Quelques remarques
+
+   Et bien oui, même si tout s'est bien déroulé dans notre 
+   dialogue, et que vous avez tout parfaitement compris, il
+   est bon de mettre en valeur certains aspects de la
+   communication.
+
+   - Les adresses MAC source et destination sont modifiées
+     à chaque passage par un routeur
+  
+   Oui, et c'est normal. Ces adresses MAC sont relatives à la
+   couche 2 dont le rôle principal est le dialogue sur un
+   réseau local. Donc les adresses MAC utilisées dans une 
+   trame doivent être en relation avec le réseau sur lequel
+   on se situe, pas celui d'à coté ;-)
+
+   Que se passerait-il si une adresse MAC de destination était
+   celle d'une interface étant sur un autre réseau ?
+   Ca ne marcherait plus :-( car la trame serait envoyée sur
+   le réseau local (en couche 2) et ne trouverait pas de 
+   machine ayant cette adresse MAC. La trame serait donc 
+   perdue.
+   Les adresses MAC contenues dans une trame Ethernet doivent
+   donc toujours être en rapport avec le réseau local. C'est
+   ce qui explique qu'elles doivent être modifiées à chaque
+   passage sur un nouveau réseau.
+
+   - Par contre, les adresses IP source et destination n'ont 
+     pas été modifiées durant le transport de A à B
+
+   Oui, et cela est encore normal !
+   La couche 3 concerne les informations de routage, donc sur 
+   des adresses appartenant à des réseaux distants. Ces 
+   adresses représentent donc les deux extrémités du dialogue 
+   et ne doivent pas être modifiées.
+
+   Que se serait-il passé si on avait modifié les adresses IP
+   source et destination à chaque passage d'un routeur ?
+   Ici encore, nous aurions eu des problèmes. Le datagramme
+   IP serait bien arrivé jusqu'au routeur 1, et lui l'aurait 
+   renvoyé vers le prochain routeur sur Internet en mettant 
+   comme adresse IP destination 140.40.40.13. Le routeur ayant
+   cette adresse 140.40.40.13 aurait bien reçu le datagramme,
+   mais voyant que c'était lui l'adresse IP de destination, il
+   aurait pris le paquet pour lui et la communication se 
+   serait arrêtée là (la couche 4 n'aurait pas reconnu ce 
+   paquet comme appartenant à une connexion valide) et 
+   badaboum...
+   Il est donc impératif de ne pas modifier les adresses IP 
+   lors du transport du datagramme. Le dialogue IP se fait de 
+   bout en bout entre les réseaux distants, alors que le 
+   dialogue Ethernet se fait de proche en proche sur chacun
+   des réseaux traversés.
+
+   Voici un petit dessin pour schématiser les deux principes 
+   que nous venons d'évoquer.
+
+   Machine A                                    Machine B
+       |                                            |
+   ----------            ----------            ----------
+   |Réseau 1|--Routeur1--|Internet|--Routeur2--|Réseau 3|
+   ----------            ----------            ----------
+       <---------------- Dialogue IP ---------------->
+       <--- DE ---><-------- DE ---------><--- DE --->
+
+   Avec DE = Dialogue Ethernet 
+
+   NB: Il est cependant possible que les adresses IP source et 
+       destination soient modifiées dans le cas de la 
+       traduction d'adresse. Ceci ne faisant pas partie 
+       intégrante du sujet, je vous invite à lire la faq sur
+       la nat (traduction d'adresse) 
+       http://www.lalitte.com/nat
+
+   - Une autre remarque que nous pouvons faire, est la 
+     foultitude d'étapes qui ont été utilisées pour un simple
+     envoi de "bonjour"
+
+   Et encore, ce n'est rien, en rentrant plus dans le détail,
+   il y a encore bon nombre d'autres communications que nous 
+   n'avons pas détaillées qui sont nécessaires au dialogue.
+   Et dire que tout cela se fait en quelques milisecondes et 
+   est complètement transparent pour l'utilisateur final...
+   C'est quand même bô Internet :-))
+
+
+9 - Mini lexique
+-----------------
+
+  9.1 - Adresse IP
+
+   L'adresse IP est un numéro codé sur 4 octets permettant 
+   d'identifier une machine de façon unique sur le réseau.  
+
+
+  9.2 - Réseau logique 
+
+   On appelle réseau logique un ensemble d'adresses IP 
+   appartenant à une même plage d'adresses. Cette plage est 
+   notamment définie par l'adresse de réseau et le masque 
+   associé.
+
+
+  9.3 - Connexion/interconnexion
+
+   Ces deux termes sont souvent employés indifféremment, à 
+   tort !
+   On parle de _connexion_ de _machines_ au sein d'un même
+   réseau, et d'_interconnexion_ de _réseaux_ entre eux.
+   La connexion se rapporte alors à une notion de couche 2,
+   alors que l'interconnexion est une notion de couche 3.
+
+
+  9.4 - Sous-réseau
+
+   On définit un sous-réseau comme un sous-ensemble d'une 
+   plage d'adresses réseau. C'est grâce au masque que l'on 
+   peut définir un sous-réseau au sein d'un réseau, et ainsi 
+   découper un réseau en plusieurs sous-réseaux.
+
+ 
+  9.5 - ARP
+ 
+   ARP est un protocole permettant de déterminer une adresse
+   MAC en fonction d'une adresse IP. 
+  
+
+10 - Annexes
+------------
+
+  10.1 - Ressources utilisées
+
+   Je me suis inspiré des connaissances que j'ai pu glaner 
+   un peu partout depuis que je fais du réseau, sans m'appuyer 
+   sur un document en particulier. Je dois cependant avouer 
+   que j'en ai beaucoup appris depuis que je donne des cours 
+   en école d'ingénieur et qu'il faut répondre aux multiples 
+   questions de ces petites têtes blondes :-)
+   Ca m'a permis de me remettre en question et d'approfondir
+   des sujets que je pensais maîtriser.
+   La route vers le savoir est encore longue ! :-)
+   
+   Pour aller plus loin sur le sujet, je vous conseillerai la
+   lecture du livre de Richard Stevens "Le TCP/IP illustré" 
+   qui est une mine d'or pour comprendre les mécanismes 
+   TCP/IP.
+
+   Et sans oublier l'excellente faq sur les firewalls de 
+   Stéphane Catteau dont je me suis inspiré pour la mise en 
+   forme.
+   Disponible sur:
+   <http://fr.comp.securite.free.fr/firewall.txt> 
+   N'hésitez pas à la consulter, on y apprend plein de choses.
+
+
+  10.2 - Remerciements
+
+   Je remercie notamment les personnes suivantes pour leur 
+   lecture assidue du cours durant sa réalisation et leurs 
+   conseils précieux.
+
+   David Blevin, Eric Belhomme, Annie D.
+
+
+  10.3 - Versions HTML, latex, pdf ou doc disponibles
+ 
+   Il n'y a pas encore de version latex, pdf ou doc 
+   disponible, mais je ne doute pas qu'une bonne âme va passer
+   par là et aura le courage de s'y coller :-)
+   Toute traduction du document est aussi bienvenue !!!
+
+
+  10.4 - Faq sur la NAT
+ 
+   Si cette faq vous a plu et que vous avez appris des choses,
+   j'en ai fait une autre sur la NAT (traduction d'adresses) 
+   disponible là:
+   <http://www.lalitte.com/nat>
+
+
+  10.5 - Faq sur les masques de sous-réseau
+
+   Si cette faq vous a plu et que vous avez appris des choses,
+   j'en ai fait une autre sur les masques de sous réseau 
+   disponible là:
+   <http://www.lalitte.com/masques>
+
+
+11 - Conclusion
+---------------
+
+   Arf... je vois le bout du tunnel...
+   Je dois bien avouer que j'ai du tourner le problème dans 
+   tous les sens afin de trouver une façon cohérente 
+   d'aborder les principes de routage.
+   J'espère que le résultat est à la hauteur de mes attentes,
+   et surtout qu'il vous aura permis de comprendre un peu
+   mieux le fonctionnement d'un des principes majeur 
+   d'Internet.
+   La compréhension en profondeur du routage n'est vraiment
+   pas une chose aisée. D'ailleurs, il me reste un bon nombre 
+   de questions en suspend auxquelles je vais essayer de 
+   répondre. Peut être dans une suite du cours :-)
+   En tout cas, je compte sur vous pour me faire un retour 
+   efficace sur ce document. Je manipule beaucoup des concepts 
+   abordés tous les jour. Mon oeil sur le sujet n'est donc pas 
+   très neuf, et il est probable que je n'explique pas bien
+   certaines notions. 
+   Si des éléments ne vous semblent pas clair lors de la 
+   lecture du document, je vous invite à me contacter à 
+   l'adresse spécifiée dans l'en-tête du document pour me 
+   faire part de vos remarques. Ne négligez pas vos remarques,
+   elles me sont extrèmement utiles pour améliorer ce 
+   document, ainsi que ma compréhension personnelle.
+   Merci de votre attention, vous pouvez éteindre votre
+   ordinateur.
+
+   
