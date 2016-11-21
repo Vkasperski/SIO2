@@ -1,0 +1,70 @@
+EDC : CAS RAVNOB
+
+Mission 4 : Suivi des commandes (SLAM 4)
+
+
+
+
+4.1)
+
+FONCTION GetDistributeur(id : chaine) : Distributeur
+DEBUT
+	RETOURNER donnees.chargerDepuisbase("Distributeur",id)
+FIN
+
+
+
+
+4.2)
+
+FONCTION EnCours() : booléen
+DEBUT
+	RETOURNER (dateEnvoie=NULL)
+FIN
+
+
+
+
+
+4.3)
+
+FONCTION GetCommandeEnCours() : Collection de <commande>
+VAR :
+	enCours : Collection de <commande>
+	laCommande : Commande
+DEBUT
+	POUR chaque laCommande dans LesCommandes FAIRE
+		SI Lacommande.EnCours()
+			encours.ajouter()
+		FIN SI
+	FIN POUR
+	RETOURNER enCours 
+FIN 
+
+
+
+4.4) 
+
+fonction XmlCommande() : chaine 
+VAR
+	XML : chaine
+DEBUT
+	xml<-'<commande id='+getID()+'>'
+	xml<-xml+'<produit variete ='le 
+FIN
+
+
+
+4.5)
+
+PROCEDURE AfficheCommandesCarreClerc()
+	persist : PersistanceSQL
+	persist <- new PersistanceSQL("192.168.10.240","2207","baseRavanob")
+	leDistributeur : distributeur
+
+DEBUT
+	gestiCom : GestionCommande
+	gestion <- new GestionCommande(persist)
+	leDistributeur <- gestionCom.getDistributeur("carr15432")
+	AFFICHER gestion.XMLnonLivres(leDistributeur)
+FIN
