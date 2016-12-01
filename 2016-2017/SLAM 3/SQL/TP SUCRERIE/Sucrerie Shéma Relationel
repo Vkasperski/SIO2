@@ -1,0 +1,18 @@
+CLIENT (code_c, nom_c, prenom_c, rue_c, cp, ville, tel_c)
+clé primaire : - reference
+
+PRODUIT(reference, designation, qte_produit, descriptif, puHT, stock, pds_pièce)
+clé primaire : reference
+
+VENDEUR(code_v, nom_v, prenom_v, rue_v, cp,ville,tel_v)
+clé primaire : code_v
+
+COMMANDE(numero_commande, code_v, code_c, date_Livraison, date_commande, total_HT, Total_TVA,Etat)
+clé primaire  : numero_commande
+clé étrangère : - code_v en ref à code_v de VENDEUR
+				- code_c en ref à code_c de CLIENT
+
+LIGNE_COMMANDE(numero_commande, numero_ligne, reference, qte_demande)
+clé primaire  : numero_commande,reference
+clé étrangère : - numero_commande en ref à numero_commande de COMMANDE
+				- reference en ref à reference de PRODUIT

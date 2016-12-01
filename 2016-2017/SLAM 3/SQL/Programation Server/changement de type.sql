@@ -40,5 +40,8 @@ CREATE PROCEDURE ModifReference(reference int(5))
 		ALTER TABLE ligne_commande_save DROP FOREIGN KEY fk_ref_save;
 		ALTER TABLE produit_save DROP PRIMARY KEY pk_ref_save;
 
+		ALTER TABLE ligne_commande_save MODIFY reference varchar;
+		ALTER TABLE produit_save MODIFY reference varchar;
 
+		
 	END;
