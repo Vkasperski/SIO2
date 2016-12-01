@@ -1,0 +1,49 @@
+VEHICULE(num_vehicule,date_vehicule)
+clé primaire : num vehicule
+
+OUVRIER(Matricule_ouvr, nom_ouvr,prenom_ouvr)
+clé primaire : matricule_ouvr
+
+QUALIFICATIOn(code_qualif,libelle)
+clé primaire : code_qualif
+
+REPARER(num_vehicule,matricule_ouvr)
+clé primaire : num_vehicule,matricule_ouvr
+clé étrangère : - num_vehicule en reference num_vehicule de VEHICULE
+				- matricule_ouvr en reference matricule_ouvr de OUVRIER
+
+OBTENIR(matricule_ouvr, code_qualif, date_obt)
+clé primaire : matricule_ouvr, code_qualif
+clé étrangère : - matricule_ouvr en reference matricule_ouvr de OUVRIER
+				- code_qualif en reference code_qualif de QUALIFICATION
+
+PROPRIETAIRE(id_prop, nom_prop)
+clé primaire id_prop
+
+VOITURE(num_vehicule,puissance_fc, id_prop)
+clé primaire : num vehicule
+clé étrangère : - id_prop en reference à id_prop de PROPRIETAIRE
+
+AVION(num_vehicule,nb_reacteurs,superficie_ailes)
+clé primaire : num vehicule
+
+BATEAU(num_vehicule)
+clé primaire : num_vehicule
+
+VOILIER(num_vehicule, hauteur_mat)
+clé primaire : num_vehicule
+
+TORPILLEUR(num_vehicule, nb_torp)
+clé primaire : num_vehicule
+
+MARIN(id_marin,nom_marin, prenom_marin)
+clé primaire : id_marin
+
+DATE(date_affect)
+clé primaire : date_affect
+
+ETRE_AFFECTER(num_vehicule, id_marin, date_affect)
+clé primaire : num_vehicule, id_marin, date_affect
+clé étrangère : - num_vehicule en reference num_vehicule de TORPILLEUR
+				- date_affect en reference date_affect de DATE
+				- id_marin en reference id_marin de MARIN
