@@ -1,5 +1,5 @@
 CLIENT (code_c, nom_c, prenom_c, rue_c, cp, ville, tel_c)
-clé primaire : - reference
+clé primaire : - ref erence
 
 PRODUIT(reference, designation, qte_produit, descriptif, puHT, stock, pds_pièce)
 clé primaire : reference
