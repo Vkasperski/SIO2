@@ -1,0 +1,29 @@
+VIP(id_v, nom_v, prenom_v, sexe_v, nationalite_v, date_naissance_v)
+Clé Primaire : id_v
+
+DATE(id_date, date_mariage)
+Clé Primaire : id_date
+
+SE_SEPARER(id_v,id_date, circonstance)
+Clé Primaire : id_v,id_date
+Clé étrangères : - id_v en référence à id_v de VIP
+				 - id_date en référence à id_date de DATE
+
+S'UNIR(id_v,id_date, lieu)
+Clé Primaire : id_v,id_date
+Clé étrangères : - id_v en référence à id_v de VIP
+				 - id_date en référence à id_date de DATE
+
+SE_LIER(id_v,id_date)
+Clé Primaire : id_v,id_date
+Clé étrangères : - id_v en référence à id_v de VIP
+				 - id_date en référence à id_date de DATE
+
+EXEMPLAIRE(id_ex, num_revue_ex, Date_publi_ex)
+clé primaire : id_ex
+
+ARTICLE(id_art, titre_art, page_art, resume_art, id_ex)
+clé primaire : id_art
+clé étrangère : id_ex en référence à id_ex de EXEMPLAIRE
+
+ETRE CONSACRE(id_vip, Num_article)

@@ -47,3 +47,6 @@ GROUP BY nomtype,prixdemih;
  FROM EMBARCATION
  WHERE codetype IN('B1','B2','P1','P2','P3')
  WITH CHECK OPTION;			/* Sinon il peut insert un autre codetype */
+
+ /* WITH CHECK OPTION : Lors d'une mise à jour à TRAVERS de cette vue, Le SGBD verifie les conditions dans clause where 
+						concerné par les enregistrements */
