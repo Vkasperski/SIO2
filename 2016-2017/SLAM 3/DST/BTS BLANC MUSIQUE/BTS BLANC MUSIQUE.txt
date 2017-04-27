@@ -1,0 +1,28 @@
+MISSION 2 :
+
+4)
+Non le trigger l'interdit'
+il faut modiifer la condition du if dans le trigger
+
+5)
+OUI
+Table inscriptions -> les clés étrangères "id_eleves" et "id_cours"
+
+6)
+
+
+SELECT intitule, descriptif
+FROM instruments
+WHERE is NOT IN(SELECT DISTINCT id_instrument FROM Cours);
+
+"NOMBRE D'ELEVES INSCRIT A DES COURS DE PIANO"
+SELECT count(inscriptions.id) AS "Nb Eleve Inscrit En Piano"
+FROM inscriptions I, Cours C
+WHERE C.id = I.id_cours
+AND libelle = "Piano";
+
+SELECT libele, count(id_cours) AS "nb_Eleves" 
+FROM inscriptions I, Cours C
+WHERE I.id = C.id
+GROUP BY libelle
+HAVING nb_Eleves > 8;
